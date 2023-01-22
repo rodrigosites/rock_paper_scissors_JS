@@ -1,63 +1,79 @@
-let WEAPON = ["Rock","Paper","Scissors"];
+const WEAPON = ["Rock","Paper","Scissors"];
+const buttons = document.querySelectorAll('button');
+const gameTextDiv = document.querySelector('.game-container');
+const playerScoreText = document.querySelector('.player-score');
+const computerScoreText = document.querySelector('.computer-score');
+let playerScore = 0;
+let computerScore = 0;
+let round = 0;
 
 function getComputerChoice() {
   return WEAPON[parseInt(Math.random()*3)];
 }
 
-function getPlayerChoice() {
-  let weapon = prompt(`Choose your weapon: ${WEAPON[0]}, ${WEAPON[1]} and ${WEAPON[2]} are accepted values`);
-  weapon = weapon[0].toUpperCase() + weapon.substring(1).toLowerCase();
-  switch (weapon) {
-    case WEAPON[0]:
-      return weapon;
-    case WEAPON[1]:
-      return weapon;
-    case WEAPON[2]:
-      return weapon;
-    default:
-      console.log(`${weapon} is not a valid choice`);
+function getPlayerChoice(weaponIndex) {
+  return WEAPON[weaponIndex];
+}
+
+function addGameText(text) {
+  const p = document.createElement('p');
+  p.textContent = text;
+  p.className = round;
+  gameTextDiv.appendChild(p);  
+}
+
+function clearRoundText() {
+  const lastRound = document.getElementsByClassName(round);
+  if (lastRound.length > 0) {
+    while (lastRound.length > 0) {
+      lastRound[0].parentNode.removeChild(lastRound[0]);
+    }
   }
-  getPlayerChoice();
 }
 
 function playRound(playerSelection, computerSelection) {
-  console.log(`You choose ${playerSelection} and Computer choose ${computerSelection}`);
+  addGameText(`Round #${++round}!`);
+  addGameText(`You choose ${playerSelection} and Computer choose ${computerSelection}`);
   if (playerSelection === WEAPON[0]) {
     if (computerSelection === WEAPON [0]) {
-      console.log("It's a draw!");
+      addGameText("It's a draw!");
     } else if (computerSelection === WEAPON[1]) {
-      console.log(`You lose! ${computerSelection} beats ${playerSelection}.`);
+      computerScoreText.innerText = `Computer: ${++computerScore}`;
+      addGameText(`You lose! ${computerSelection} beats ${playerSelection}.`);
     } else {
-      console.log(`You win! ${playerSelection} beats ${computerSelection}.`);
+      playerScoreText.innerText = `Player: ${++playerScore}`;
+      addGameText(`You win! ${playerSelection} beats ${computerSelection}.`);
     }
   }
   if (playerSelection === WEAPON[1]) {
     if (computerSelection === WEAPON [1]) {
-      console.log("It's a draw!");
+      addGameText("It's a draw!");
     } else if (computerSelection === WEAPON[2]) {
-      console.log(`You lose! ${computerSelection} beats ${playerSelection}.`);
+      computerScoreText.innerText = `Computer: ${++computerScore}`;
+      addGameText(`You lose! ${computerSelection} beats ${playerSelection}.`);
     } else {
-      console.log(`You win! ${playerSelection} beats ${computerSelection}.`);
+      playerScoreText.innerText = `Player: ${++playerScore}`;
+      addGameText(`You win! ${playerSelection} beats ${computerSelection}.`);
     }
   }
   if (playerSelection === WEAPON[2]) {
     if (computerSelection === WEAPON [2]) {
-      console.log("It's a draw!");
+      addGameText("It's a draw!");
     } else if (computerSelection === WEAPON[0]) {
-      console.log(`You lose! ${computerSelection} beats ${playerSelection}.`);
+      computerScoreText.innerText = `Computer: ${++computerScore}`;
+      addGameText(`You lose! ${computerSelection} beats ${playerSelection}.`);
     } else {
-      console.log(`You win! ${playerSelection} beats ${computerSelection}.`);
+      playerScoreText.innerText = `Player: ${++playerScore}`;
+      addGameText(`You win! ${playerSelection} beats ${computerSelection}.`);
     }
   }
 }
 
-function game() {
-  console.log("Welcome to the Rock Paper Scissors game!")
-  for (let i=0; i < 5; i++) {
-    console.log(`Round ${i+1}`);
-    playRound(getPlayerChoice(), getComputerChoice());
-  }
-  console.log("Game ended.");
-}
-
-game();
+buttons.forEach((button) => {
+  button.addEventListener('click', (event) => {
+    clearRoundText();
+    playRound(getPlayerChoice(event.target.value), getComputerChoice());
+    if (playerScore === 5) addGameText('Player won the game!');
+    if (computerScore === 5) addGameText('The Computer won the game!');
+  });
+});

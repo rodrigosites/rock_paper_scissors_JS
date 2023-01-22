@@ -1,0 +1,11 @@
+.btn-container, .page-header {
+  display: flex;
+}
+
+.btn-container, .page-header {
+  justify-content: space-around;
+}
+
+.game-container {
+  text-align: center;
+}
